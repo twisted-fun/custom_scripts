@@ -14,12 +14,17 @@ elif argc == 3:
 
 
 skeleton = '''from pwn import *
+import sys
 
 elf_name = "''' + elf_name + '''"
 libc_name = "''' + libc_name + '''"
-libc = ELF(libc_name)
-r = process(elf_name, env={"LD_PRELOAD": libc_name})
-#r = remote("", )
+#libc = ELF(libc_name)
+
+if len(sys.argv) > 1:
+	r = remote(sys.argv[1], int(sys.argv[2]))
+else:
+	r = process(elf_name, env={"LD_PRELOAD": libc_name})
+
 io = lambda : r.interactive()
 sla = lambda x, y : r.sendlineafter(x, y)
 sa = lambda x, y : r.sendafter(x, y)
